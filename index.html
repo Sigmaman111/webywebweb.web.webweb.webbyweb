@@ -1,101 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Hub</title>
 
-<!-- Styling -->
 <style>
     body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #1a1a1a, #2b2b2b);
+        padding: 30px;
+        background: #1a1a1a;
         color: white;
+        font-family: Arial;
+    }
+
+    .search-container {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
         text-align: center;
     }
 
-    header {
-        padding: 20px;
-        font-size: 32px;
-        font-weight: bold;
-        background: #111;
-        letter-spacing: 2px;
-    }
-
-    .container {
-        margin-top: 80px;
-    }
-
-    .title {
-        font-size: 52px;
-        margin-bottom: 20px;
-    }
-
-    .subtitle {
-        font-size: 20px;
-        opacity: 0.8;
-        margin-bottom: 40px;
-    }
-
-    .search-box {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-
     input {
+        width: 100%;
         padding: 12px;
-        width: 320px;
         border-radius: 8px;
         border: none;
-        font-size: 16px;
+        font-size: 18px;
     }
 
-    button {
-        padding: 12px 20px;
-        font-size: 16px;
-        background: #ff3d7f;
-        border: none;
-        border-radius: 8px;
+    .result-box {
+        margin-top: 12px;
+        background: #222;
+        border-radius: 10px;
+        padding: 15px;
+        display: none;
         cursor: pointer;
-        color: white;
-        transition: 0.25s;
+        text-align: left;
+        transition: 0.2s;
     }
 
-    button:hover {
-        background: #ff5b97;
+    .result-box:hover {
+        background: #333;
+    }
+
+    .result-img {
+        width: 90px;
+        height: 90px;
+        border-radius: 8px;
+        object-fit: cover;
+        float: left;
+        margin-right: 12px;
+    }
+
+    .result-title {
+        font-size: 22px;
+        margin: 0;
+        padding-top: 10px;
     }
 </style>
 </head>
 
 <body>
 
-<header>GAME HUB</header>
+<div class="search-container">
+    <input id="searchBar" type="text" placeholder="Search a game..." oninput="showResult()">
 
-<div class="container">
-    <div class="title">Welcome to Game Hub</div>
-    <div class="subtitle">Play, explore, and discover new games</div>
-
-    <div class="search-box">
-        <input id="searchInput" type="text" placeholder="Search for a game...">
-        <button onclick="goToSearch()">Search</button>
+    <div id="resultBox" class="result-box" onclick="openGame()">
+        <img id="resultImg" class="result-img">
+        <h3 id="resultTitle" class="result-title"></h3>
     </div>
 </div>
 
-<!-- JavaScript -->
 <script>
-function goToSearch() {
-    const query = document.getElementById("searchInput").value;
-    
-    // URL of your GitHub Pages search site
-    // Example: https://yourname.github.io/games/search.html
-    const githubBase = "https://YOUR-USERNAME.github.io/YOUR-REPO/search.html";
+// LIST OF GAMES
+const games = [
+    {
+        name: "cookie clicker",
+        link: "games/cookie-clicker/index.html",
+        image: "games/cookie-clicker/thumbnail.png"
+    },
+    {
+        name: "game one",
+        link: "games/game1/index.html",
+        image: "games/game1/thumbnail.png"
+    },
+    {
+        name: "game two",
+        link: "games/game2/index.html",
+        image: "games/game2/thumbnail.png"
+    }
+];
 
-    // Redirect with ?q= parameter
-    window.location.href = githubBase + "?q=" + encodeURIComponent(query);
+let currentLink = "";
+
+// SEARCH FUNCTION
+function showResult() {
+    const text = document.getElementById("searchBar").value.toLowerCase().trim();
+    const box = document.getElementById("resultBox");
+
+    if (text === "") {
+        box.style.display = "none";
+        return;
+    }
+
+    const match = games.find(g => g.name.startsWith(text));
+
+    if (match) {
+        document.getElementById("resultImg").src = match.image;
+        document.getElementById("resultTitle").textContent = match.name;
+        currentLink = match.link;
+        box.style.display = "block";
+    } else {
+        box.style.display = "none";
+    }
+}
+
+// OPEN GAME ON CLICK
+function openGame() {
+    if (currentLink) {
+        window.location.href = currentLink;
+    }
 }
 </script>
 
 </body>
 </html>
+
