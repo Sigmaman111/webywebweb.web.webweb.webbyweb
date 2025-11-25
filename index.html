@@ -13,6 +13,12 @@
         font-family: Arial;
     }
 
+    h1 {
+        text-align: center;
+        font-size: 42px;
+        margin-bottom: 25px;
+    }
+
     .search-container {
         width: 100%;
         max-width: 600px;
@@ -66,6 +72,8 @@
 
 <body>
 
+<h1>GAME HUB</h1>
+
 <div class="search-container">
     <input id="searchBar" type="text" placeholder="Search a game..." oninput="showResults()">
     <div id="resultsContainer" class="results-container"></div>
@@ -80,11 +88,6 @@ const games = [
         image: "games/cookie-clicker/thumbnail.png"
     },
     {
-        name: "cookie world",
-        link: "games/cookie-world/index.html",
-        image: "games/cookie-world/thumb.png"
-    },
-    {
         name: "game one",
         link: "games/game1/index.html",
         image: "games/game1/thumbnail.png"
@@ -93,30 +96,22 @@ const games = [
         name: "game two",
         link: "games/game2/index.html",
         image: "games/game2/thumbnail.png"
-    },
-    {
-        name: "clicking madness",
-        link: "games/clicking-madness/index.html",
-        image: "games/clicking-madness/thumb.png"
     }
 ];
 
-// SHOW ALL PARTIAL MATCHES
+// SHOW PARTIAL SEARCH RESULTS
 function showResults() {
     const text = document.getElementById("searchBar").value.toLowerCase().trim();
     const container = document.getElementById("resultsContainer");
 
-    container.innerHTML = ""; // clear old results
+    container.innerHTML = "";
 
-    if (text === "") return; // don’t show anything if empty input
+    if (text === "") return;
 
-    // find all games that contain the typed text
     const matches = games.filter(g => g.name.toLowerCase().includes(text));
 
-    // no match → show nothing
     if (matches.length === 0) return;
 
-    // build results list
     matches.forEach(game => {
         const box = document.createElement("div");
         box.className = "result-box";
@@ -126,7 +121,6 @@ function showResults() {
             <img class="result-img" src="${game.image}">
             <h3 class="result-title">${game.name}</h3>
         `;
-
         container.appendChild(box);
     });
 }
@@ -134,3 +128,4 @@ function showResults() {
 
 </body>
 </html>
+
