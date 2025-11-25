@@ -28,15 +28,21 @@
         font-size: 18px;
     }
 
-    .result-box {
+    .results-container {
         margin-top: 12px;
+        width: 100%;
+    }
+
+    .result-box {
         background: #222;
         border-radius: 10px;
         padding: 15px;
-        display: none;
+        margin-bottom: 12px;
         cursor: pointer;
         text-align: left;
         transition: 0.2s;
+        display: flex;
+        align-items: center;
     }
 
     .result-box:hover {
@@ -48,14 +54,12 @@
         height: 90px;
         border-radius: 8px;
         object-fit: cover;
-        float: left;
-        margin-right: 12px;
+        margin-right: 15px;
     }
 
     .result-title {
         font-size: 22px;
         margin: 0;
-        padding-top: 10px;
     }
 </style>
 </head>
@@ -63,12 +67,8 @@
 <body>
 
 <div class="search-container">
-    <input id="searchBar" type="text" placeholder="Search a game..." oninput="showResult()">
-
-    <div id="resultBox" class="result-box" onclick="openGame()">
-        <img id="resultImg" class="result-img">
-        <h3 id="resultTitle" class="result-title"></h3>
-    </div>
+    <input id="searchBar" type="text" placeholder="Search a game..." oninput="showResults()">
+    <div id="resultsContainer" class="results-container"></div>
 </div>
 
 <script>
@@ -80,6 +80,11 @@ const games = [
         image: "games/cookie-clicker/thumbnail.png"
     },
     {
+        name: "cookie world",
+        link: "games/cookie-world/index.html",
+        image: "games/cookie-world/thumb.png"
+    },
+    {
         name: "game one",
         link: "games/game1/index.html",
         image: "games/game1/thumbnail.png"
@@ -88,41 +93,44 @@ const games = [
         name: "game two",
         link: "games/game2/index.html",
         image: "games/game2/thumbnail.png"
+    },
+    {
+        name: "clicking madness",
+        link: "games/clicking-madness/index.html",
+        image: "games/clicking-madness/thumb.png"
     }
 ];
 
-let currentLink = "";
-
-// SEARCH FUNCTION
-function showResult() {
+// SHOW ALL PARTIAL MATCHES
+function showResults() {
     const text = document.getElementById("searchBar").value.toLowerCase().trim();
-    const box = document.getElementById("resultBox");
+    const container = document.getElementById("resultsContainer");
 
-    if (text === "") {
-        box.style.display = "none";
-        return;
-    }
+    container.innerHTML = ""; // clear old results
 
-    const match = games.find(g => g.name.startsWith(text));
+    if (text === "") return; // don’t show anything if empty input
 
-    if (match) {
-        document.getElementById("resultImg").src = match.image;
-        document.getElementById("resultTitle").textContent = match.name;
-        currentLink = match.link;
-        box.style.display = "block";
-    } else {
-        box.style.display = "none";
-    }
-}
+    // find all games that contain the typed text
+    const matches = games.filter(g => g.name.toLowerCase().includes(text));
 
-// OPEN GAME ON CLICK
-function openGame() {
-    if (currentLink) {
-        window.location.href = currentLink;
-    }
+    // no match → show nothing
+    if (matches.length === 0) return;
+
+    // build results list
+    matches.forEach(game => {
+        const box = document.createElement("div");
+        box.className = "result-box";
+        box.onclick = () => window.location.href = game.link;
+
+        box.innerHTML = `
+            <img class="result-img" src="${game.image}">
+            <h3 class="result-title">${game.name}</h3>
+        `;
+
+        container.appendChild(box);
+    });
 }
 </script>
 
 </body>
 </html>
-
