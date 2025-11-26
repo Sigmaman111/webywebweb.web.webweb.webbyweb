@@ -15,7 +15,7 @@
             height: 100%;
             border: none;
         }
-        #back, #guiToggle {
+        #back, #runHack {
             position: absolute;
             left: 10px;
             padding: 10px 14px;
@@ -25,17 +25,11 @@
             cursor: pointer;
             font-family: sans-serif;
         }
-        #back:hover, #guiToggle:hover {
+        #back:hover, #runHack:hover {
             background: rgba(0,0,0,0.8);
         }
         #back { top: 10px; }
-        #guiToggle { top: 55px; } /* GUI button under the Back button */
-
-        /* Optional: keep debug panel above iframe */
-        #debug {
-            position: absolute;
-            z-index: 99999;
-        }
+        #runHack { top: 55px; }
     </style>
 </head>
 <body>
@@ -43,171 +37,155 @@
 <!-- BACK BUTTON -->
 <div id="back" onclick="window.location.href='../index.html'">← Back</div>
 
-<!-- NEW GUI TOGGLE BUTTON -->
-<div id="guiToggle" onclick="toggleGUI()">GUI (click then press h)</div>
+<!-- NEW HACK BUTTON -->
+<div id="runHack" onclick="injectHack()">Run Hack</div>
 
-<!-- YOUR DEBUG PANEL -->
-<div id="debug" style="display: block;">
-    <!-- your entire debug HTML block goes here unchanged -->
-   console.log('[== Starting hack... ==]');
-
-var ans = '';
-var confirmans = false;
-var forCookies = { iter: 0, ctr: 0 };
-
-const hinfo = {
-    version: '1.5',
-    changes: ''
-};
-
-var ac = {
-    sure: false,
-    click: function() {
-        document.getElementById('bigCookie').click();
-    },
-    timer: null,
-    termtimer: function() {
-        if (!ac.timer) {
-            alert('false ac.termtimer() call');
-        } else {
-            clearInterval(ac.timer);
-            ac.timer = null;
-        }
-    },
-    warning: false
-};
-
-var mwheel = { active: false, active2: false };
-var getFree = { itemName: '', wrongItem: false };
-var buffs = { duration: 0, pow: 0 };
-
-var CookiePatcher = {
-    patchedGrimoireBackfire: function(spell){ return 0; },
-    originalGrimoireBackfire: function(spell){
-        var failChance = 0.15;
-        if(Game.hasBuff('Magic adept')) failChance *= 0.1;
-        if(Game.hasBuff('Magic inept')) failChance *= 5;
-        if (spell.failFunc) failChance = spell.failFunc(failChance);
-        return failChance;
-    }
-};
-
-document.onkeydown = function(e){
-    var key = e.which || e.keyCode;
-    if(key===72){
-        hackMenu();
-    } else if (key === 67) {
-        ac.termtimer();
-    }
-};
-
-var hmenuText =
-'Welcome to Cookie Clicker hack v.' + hinfo.version + '!\n' +
-'Press H to open this menu at any time.\n\n' +
-'1) Earn free cookies\n' +
-'2) Spawn golden cookies\n' +
-'3) Autoclicker\n' +
-'4) Mouse Wheel clicking\n' +
-'5) Buy for Free\n' +
-'6) Gain Sugar lumps\n' +
-'7) Gain buffs\n' +
-'8) Grimoire hacks';
-
-function hackMenu() {
-    ans = prompt(hmenuText);
-
-    /* 1 — free cookies */
-    if (ans == '1') {
-        ans = prompt('How many cookies do you want to earn?');
-        if (ans) {
-            Game.cookies += Number(ans);
-            Game.cookiesEarned += Number(ans);
-        }
-
-    /* 2 — golden cookies */
-    } else if (ans == '2') {
-        ans = prompt('How many golden cookies to spawn?');
-        if (ans && Number(ans) > 0) {
-            forCookies.iter = Number(ans);
-            for (forCookies.ctr=0; forCookies.ctr < forCookies.iter; forCookies.ctr++) {
-                new Game.shimmer("golden");
-            }
-            forCookies.ctr = 0;
-        }
-
-    /* 3 — autoclicker */
-    } else if (ans == '3') {
-        ans = prompt('Delay between clicks in ms (press C to stop).');
-        if (ans && Number(ans) >= 1) {
-            ac.timer = setInterval(ac.click, Number(ans));
-        }
-
-    /* 4 — mousewheel mode */
-    } else if (ans == '4') {
-        mwheel.active = !mwheel.active;
-        document.onmousewheel = mwheel.active ? ac.click : null;
-        alert(`Mouse wheel clicking ${mwheel.active ? 'enabled' : 'disabled'}`);
-
-    /* 5 — buy free buildings */
-    } else if (ans == '5') {
-        var list = [
-            'Cursor','Alchemy lab','Antimatter condenser','Bank','Chancemaker',
-            'Factory','Farm','Fractal engine','Grandma','Javascript console',
-            'Mine','Portal','Prism','Shipment','Temple','Time machine','Wizard tower'
-        ];
-        var itemID = prompt(list.map((x,i)=>`${i+1}) ${x}`).join('\n'));
-        var idx = Number(itemID) - 1;
-        if (idx >= 0 && idx < list.length) {
-            var amt = Number(prompt('How many?'));
-            if (!isNaN(amt)) Game.Objects[list[idx]].getFree(amt);
-        }
-
-    /* 6 — sugar lumps */
-    } else if (ans == '6') {
-        ans = prompt('How many sugar lumps?');
-        if (ans && !isNaN(Number(ans))) {
-            Game.gainLumps(Number(ans));
-        }
-
-    /* 7 — buffs */
-    } else if (ans == '7') {
-        var b = prompt('Buffs:\n1) Frenzy');
-        if (b == '1') {
-            var dur = Number(prompt('Duration in seconds?'));
-            var pow = Number(prompt('Power multiplier?'));
-            Game.gainBuff('frenzy', dur, pow);
-        }
-
-    /* 8 — Grimoire */
-    } else if (ans == '8') {
-        if (Game.Objects["Wizard tower"].amount <= 0 || Game.Objects["Wizard tower"].level < 2) {
-            alert('You have not unlocked the Grimoire.');
-        } else {
-            var g = prompt('1) Zero backfire\n2) Normal backfire');
-            if (g == '1') {
-                Game.Objects["Wizard tower"].minigame.getFailChance =
-                    CookiePatcher.patchedGrimoireBackfire;
-            } else if (g == '2') {
-                Game.Objects["Wizard tower"].minigame.getFailChance =
-                    CookiePatcher.originalGrimoireBackfire;
-            }
-        }
-    }
-}
-
-console.log('[== Hack ready. Press H to open menu. ==]');
-
-</div>
-
-<!-- GAME -->
-<iframe src="https://learncodingdaily.com/assets/mainstorage/cookieclicker.html"></iframe>
+<!-- COOKIE CLICKER -->
+<iframe id="ccFrame" src="https://learncodingdaily.com/assets/mainstorage/cookieclicker.html"></iframe>
 
 <script>
-function toggleGUI() {
-    const dbg = document.getElementById("debug");
-    dbg.style.display = dbg.style.display === "none" ? "block" : "none";
+function injectHack() {
+    const iframe = document.getElementById("ccFrame").contentWindow;
+
+    iframe.eval(`
+        console.log('[== Starting hack... ==]');
+
+        var ans = '';
+        var confirmans = false;
+        var forCookies = { iter: 0, ctr: 0 };
+
+        const hinfo = {
+            version: '1.5',
+            changes: ''
+        };
+
+        var ac = {
+            sure: false,
+            click: function() {
+                document.getElementById('bigCookie').click();
+            },
+            timer: null,
+            termtimer: function() {
+                if (!ac.timer) {
+                    alert('false ac.termtimer() call');
+                } else {
+                    clearInterval(ac.timer);
+                    ac.timer = null;
+                }
+            },
+            warning: false
+        };
+
+        var mwheel = { active: false, active2: false };
+        var getFree = { itemName: '', wrongItem: false };
+        var buffs = { duration: 0, pow: 0 };
+
+        var CookiePatcher = {
+            patchedGrimoireBackfire: function(spell){ return 0; },
+            originalGrimoireBackfire: function(spell){
+                var failChance = 0.15;
+                if(Game.hasBuff('Magic adept')) failChance *= 0.1;
+                if(Game.hasBuff('Magic inept')) failChance *= 5;
+                if (spell.failFunc) failChance = spell.failFunc(failChance);
+                return failChance;
+            }
+        };
+
+        document.onkeydown = function(e){
+            var key = e.which || e.keyCode;
+            if(key===72){
+                hackMenu();
+            } else if (key === 67) {
+                ac.termtimer();
+            }
+        };
+
+        var hmenuText =
+        'Welcome to Cookie Clicker hack v.' + hinfo.version + '!\\n' +
+        'Press H to open this menu at any time.\\n\\n' +
+        '1) Earn free cookies\\n' +
+        '2) Spawn golden cookies\\n' +
+        '3) Autoclicker\\n' +
+        '4) Mouse Wheel clicking\\n' +
+        '5) Buy for Free\\n' +
+        '6) Gain Sugar lumps\\n' +
+        '7) Gain buffs\\n' +
+        '8) Grimoire hacks';
+
+        function hackMenu() {
+            ans = prompt(hmenuText);
+
+            if (ans == '1') {
+                ans = prompt('How many cookies do you want to earn?');
+                if (ans) {
+                    Game.cookies += Number(ans);
+                    Game.cookiesEarned += Number(ans);
+                }
+            } else if (ans == '2') {
+                ans = prompt('How many golden cookies to spawn?');
+                if (ans && Number(ans) > 0) {
+                    forCookies.iter = Number(ans);
+                    for (forCookies.ctr=0; forCookies.ctr < forCookies.iter; forCookies.ctr++) {
+                        new Game.shimmer("golden");
+                    }
+                    forCookies.ctr = 0;
+                }
+            } else if (ans == '3') {
+                ans = prompt('Delay between clicks in ms (press C to stop).');
+                if (ans && Number(ans) >= 1) {
+                    ac.timer = setInterval(ac.click, Number(ans));
+                }
+            } else if (ans == '4') {
+                mwheel.active = !mwheel.active;
+                document.onmousewheel = mwheel.active ? ac.click : null;
+                alert(\`Mouse wheel clicking \${mwheel.active ? 'enabled' : 'disabled'}\`);
+            } else if (ans == '5') {
+                var list = [
+                    'Cursor','Alchemy lab','Antimatter condenser','Bank','Chancemaker',
+                    'Factory','Farm','Fractal engine','Grandma','Javascript console',
+                    'Mine','Portal','Prism','Shipment','Temple','Time machine','Wizard tower'
+                ];
+                var itemID = prompt(list.map((x,i)=>\`\${i+1}) \${x}\`).join('\\n'));
+                var idx = Number(itemID) - 1;
+                if (idx >= 0 && idx < list.length) {
+                    var amt = Number(prompt('How many?'));
+                    if (!isNaN(amt)) Game.Objects[list[idx]].getFree(amt);
+                }
+            } else if (ans == '6') {
+                ans = prompt('How many sugar lumps?');
+                if (ans && !isNaN(Number(ans))) {
+                    Game.gainLumps(Number(ans));
+                }
+            } else if (ans == '7') {
+                var b = prompt('Buffs:\\n1) Frenzy');
+                if (b == '1') {
+                    var dur = Number(prompt('Duration in seconds?'));
+                    var pow = Number(prompt('Power multiplier?'));
+                    Game.gainBuff('frenzy', dur, pow);
+                }
+            } else if (ans == '8') {
+                if (Game.Objects["Wizard tower"].amount <= 0 || Game.Objects["Wizard tower"].level < 2) {
+                    alert('You have not unlocked the Grimoire.');
+                } else {
+                    var g = prompt('1) Zero backfire\\n2) Normal backfire');
+                    if (g == '1') {
+                        Game.Objects["Wizard tower"].minigame.getFailChance =
+                            CookiePatcher.patchedGrimoireBackfire;
+                    } else if (g == '2') {
+                        Game.Objects["Wizard tower"].minigame.getFailChance =
+                            CookiePatcher.originalGrimoireBackfire;
+                    }
+                }
+            }
+        }
+
+        console.log('[== Hack ready. Press H to open menu. ==]');
+    `);
+
+    alert("Hack injected. Press H inside the game.");
 }
 </script>
 
 </body>
 </html>
+
