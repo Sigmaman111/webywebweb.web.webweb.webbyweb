@@ -49,10 +49,154 @@
 <!-- YOUR DEBUG PANEL -->
 <div id="debug" style="display: block;">
     <!-- your entire debug HTML block goes here unchanged -->
-    <div id="debug" style="display: block;">
-          <div id="devConsole" class="framed"><div class="icon" style="position:absolute;left:-9px;top:-6px;background-position:-480px -288px;"></div><div style="position:absolute;left:0px;top:0px;z-index:10;font-size:10px;background:#000;padding:1px;" id="fpsCounter">28 fps</div><div id="devConsoleContent"><div class="title" style="font-size:14px;margin:6px;">Dev tools</div><a class="option neato" onclick="Game.Ascend(1);">Ascend</a><div class="line"></div><a class="option neato" onclick="Game.cookies*=10;Game.cookiesEarned*=10;">x10</a><a class="option neato" onclick="Game.cookies/=10;Game.cookiesEarned/=10;">/10</a><br><a class="option neato" onclick="Game.cookies*=1000;Game.cookiesEarned*=1000;">x1k</a><a class="option neato" onclick="Game.cookies/=1000;Game.cookiesEarned/=1000;">/1k</a><br><a class="option neato" onclick="for (var i in Game.Objects){Game.Objects[i].buy(100);}">Buy 100 of all</a><a class="option neato" onclick="for (var i in Game.Objects){Game.Objects[i].sell(100);}">Sell 100 of all</a><br><a class="option neato" onclick="Game.gainLumps(10);">+10 lumps</a><a class="option neato" onclick="for (var i in Game.Objects){Game.Objects[i].level=0;Game.Objects[i].onMinigame=false;Game.Objects[i].refresh();}Game.recalculateGains=1;">Reset levels</a><a class="option neato" onclick="Game.cookiesReset+=Game.HowManyCookiesReset((Game.heavenlyChips||1)*1000);Game.EarnHeavenlyChips(0,true);Game.recalculateGains=1;">HC x1k</a><a class="option neato" onclick="Game.cookiesReset=(Game.heavenlyChips&lt;100?0:Game.HowManyCookiesReset(Math.floor(Game.heavenlyChips*0.001)));Game.cookiesReset=Math.max(Game.cookiesReset,0);Game.EarnHeavenlyChips(0,true);if (Game.cookiesReset&lt;=0){Game.heavenlyChips=0;}Game.recalculateGains=1;">HC /1k</a><br><a class="option neato" onclick="Game.cookiesEarned=0;Game.recalculateGains=1;">Reset cookies earned</a><br><div class="line"></div><a class="option warning" onclick="Game.RuinTheFun(1);">Ruin The Fun</a><a class="option warning" onclick="Game.SesameReset();">Wipe</a><a class="option neato" onclick="Game.GetAllDebugs();">All debugs</a><a class="option neato" onclick="Game.debugTimersOn=!Game.debugTimersOn;Game.OpenSesame();">Timers Off</a><br><a class="option neato" onclick="Game.SetAllUpgrades(0);">No upgrades</a><a class="option neato" onclick="Game.SetAllUpgrades(1);">All upgrades</a><br><a class="option neato" onclick="Game.SetAllAchievs(0);">No achievs</a><a class="option neato" onclick="Game.SetAllAchievs(1);">All achievs</a><br><a class="option neato" onclick="Game.santaLevel=0;Game.dragonLevel=0;">Reset specials</a><a class="option neato" onclick="Game.MaxSpecials();">Max specials</a><br><a class="option neato" onclick="Game.lumpRefill=0;/*Date.now()-Game.getLumpRefillMax();*/">Reset refills</a><a class="option neato" onclick="Game.EditAscend();">Ascend Edit</a><a class="option neato" onclick="Game.DebugUpgradeCpS();">Debug upgrades CpS</a><a class="option neato" onclick="Game.seed=Game.makeSeed();">Re-seed</a><a class="option neato" onclick="Game.heralds=100;l('heraldsAmount').textContent=Game.heralds;Game.externalDataLoaded=true;Game.recalculateGains=1;">Max heralds</a><div class="line"></div><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='frenzy';">Frenzy</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='multiply cookies';">Lucky</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='ruin cookies';">Ruin</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='blood frenzy';">Elder frenzy</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='clot';">Clot</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='click frenzy';">Click frenzy</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='cursed finger';">Cursed finger</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='chain cookie';">Cookie chain</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='cookie storm';">Cookie storm</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='building special';">Building special</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='dragon harvest';">Dragon Harvest</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='dragonflight';">Dragonflight</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='free sugar lump';">Sweet</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='blab';">Blab</a></div></div><canvas id="fpsGraph" width="128" height="64" style="opacity: 0.5; pointer-events: none; transform-origin: 0% 0%; transform: scale(0.75);"></canvas>
-          <div id="debugLog" style="display: none;"><div style="border-top:1px solid #ccc;">START</div><div style="padding-left:8px;">browser stuff : 34ms</div><div style="border-top:1px solid #ccc;">LOGIC</div><div style="padding-left:8px;">logic : 0ms</div><div style="border-top:1px solid #ccc;">END LOGIC</div><div style="padding-left:8px;">window background : 0ms</div><div style="padding-left:8px;">left background : 0ms</div><div style="padding-left:8px;">particles : 0ms</div><div style="padding-left:8px;">shine : 0ms</div><div style="padding-left:8px;">big cookie : 0ms</div><div style="padding-left:8px;">cursors : 0ms</div><div style="padding-left:8px;">milk : 0ms</div><div style="padding-left:8px;">wrinklers : 0ms</div><div style="padding-left:8px;">evolvables : 0ms</div><div style="padding-left:8px;">text particles : 0ms</div><div style="padding-left:8px;">end of background : 0ms</div><div style="padding-left:8px;">cookie amount : 0ms</div><div style="padding-left:8px;">draw minigames : 0ms</div><div style="padding-left:8px;">store : 0ms</div><div style="padding-left:8px;">buildings : 0ms</div><div style="padding-left:8px;">notes : 0ms</div></div>
-        </div>
+   console.log('[== Starting hack... ==]');
+
+var ans = '';
+var confirmans = false;
+var forCookies = { iter: 0, ctr: 0 };
+
+const hinfo = {
+    version: '1.5',
+    changes: ''
+};
+
+var ac = {
+    sure: false,
+    click: function() {
+        document.getElementById('bigCookie').click();
+    },
+    timer: null,
+    termtimer: function() {
+        if (!ac.timer) {
+            alert('false ac.termtimer() call');
+        } else {
+            clearInterval(ac.timer);
+            ac.timer = null;
+        }
+    },
+    warning: false
+};
+
+var mwheel = { active: false, active2: false };
+var getFree = { itemName: '', wrongItem: false };
+var buffs = { duration: 0, pow: 0 };
+
+var CookiePatcher = {
+    patchedGrimoireBackfire: function(spell){ return 0; },
+    originalGrimoireBackfire: function(spell){
+        var failChance = 0.15;
+        if(Game.hasBuff('Magic adept')) failChance *= 0.1;
+        if(Game.hasBuff('Magic inept')) failChance *= 5;
+        if (spell.failFunc) failChance = spell.failFunc(failChance);
+        return failChance;
+    }
+};
+
+document.onkeydown = function(e){
+    var key = e.which || e.keyCode;
+    if(key===72){
+        hackMenu();
+    } else if (key === 67) {
+        ac.termtimer();
+    }
+};
+
+var hmenuText =
+'Welcome to Cookie Clicker hack v.' + hinfo.version + '!\n' +
+'Press H to open this menu at any time.\n\n' +
+'1) Earn free cookies\n' +
+'2) Spawn golden cookies\n' +
+'3) Autoclicker\n' +
+'4) Mouse Wheel clicking\n' +
+'5) Buy for Free\n' +
+'6) Gain Sugar lumps\n' +
+'7) Gain buffs\n' +
+'8) Grimoire hacks';
+
+function hackMenu() {
+    ans = prompt(hmenuText);
+
+    /* 1 — free cookies */
+    if (ans == '1') {
+        ans = prompt('How many cookies do you want to earn?');
+        if (ans) {
+            Game.cookies += Number(ans);
+            Game.cookiesEarned += Number(ans);
+        }
+
+    /* 2 — golden cookies */
+    } else if (ans == '2') {
+        ans = prompt('How many golden cookies to spawn?');
+        if (ans && Number(ans) > 0) {
+            forCookies.iter = Number(ans);
+            for (forCookies.ctr=0; forCookies.ctr < forCookies.iter; forCookies.ctr++) {
+                new Game.shimmer("golden");
+            }
+            forCookies.ctr = 0;
+        }
+
+    /* 3 — autoclicker */
+    } else if (ans == '3') {
+        ans = prompt('Delay between clicks in ms (press C to stop).');
+        if (ans && Number(ans) >= 1) {
+            ac.timer = setInterval(ac.click, Number(ans));
+        }
+
+    /* 4 — mousewheel mode */
+    } else if (ans == '4') {
+        mwheel.active = !mwheel.active;
+        document.onmousewheel = mwheel.active ? ac.click : null;
+        alert(`Mouse wheel clicking ${mwheel.active ? 'enabled' : 'disabled'}`);
+
+    /* 5 — buy free buildings */
+    } else if (ans == '5') {
+        var list = [
+            'Cursor','Alchemy lab','Antimatter condenser','Bank','Chancemaker',
+            'Factory','Farm','Fractal engine','Grandma','Javascript console',
+            'Mine','Portal','Prism','Shipment','Temple','Time machine','Wizard tower'
+        ];
+        var itemID = prompt(list.map((x,i)=>`${i+1}) ${x}`).join('\n'));
+        var idx = Number(itemID) - 1;
+        if (idx >= 0 && idx < list.length) {
+            var amt = Number(prompt('How many?'));
+            if (!isNaN(amt)) Game.Objects[list[idx]].getFree(amt);
+        }
+
+    /* 6 — sugar lumps */
+    } else if (ans == '6') {
+        ans = prompt('How many sugar lumps?');
+        if (ans && !isNaN(Number(ans))) {
+            Game.gainLumps(Number(ans));
+        }
+
+    /* 7 — buffs */
+    } else if (ans == '7') {
+        var b = prompt('Buffs:\n1) Frenzy');
+        if (b == '1') {
+            var dur = Number(prompt('Duration in seconds?'));
+            var pow = Number(prompt('Power multiplier?'));
+            Game.gainBuff('frenzy', dur, pow);
+        }
+
+    /* 8 — Grimoire */
+    } else if (ans == '8') {
+        if (Game.Objects["Wizard tower"].amount <= 0 || Game.Objects["Wizard tower"].level < 2) {
+            alert('You have not unlocked the Grimoire.');
+        } else {
+            var g = prompt('1) Zero backfire\n2) Normal backfire');
+            if (g == '1') {
+                Game.Objects["Wizard tower"].minigame.getFailChance =
+                    CookiePatcher.patchedGrimoireBackfire;
+            } else if (g == '2') {
+                Game.Objects["Wizard tower"].minigame.getFailChance =
+                    CookiePatcher.originalGrimoireBackfire;
+            }
+        }
+    }
+}
+
+console.log('[== Hack ready. Press H to open menu. ==]');
+
 </div>
 
 <!-- GAME -->
