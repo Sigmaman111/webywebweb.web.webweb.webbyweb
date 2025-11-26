@@ -15,9 +15,10 @@
             height: 100%;
             border: none;
         }
-        #back, #runHack {
+        #back {
             position: absolute;
             left: 10px;
+            top: 10px;
             padding: 10px 14px;
             background: rgba(0,0,0,0.6);
             color: white;
@@ -25,26 +26,20 @@
             cursor: pointer;
             font-family: sans-serif;
         }
-        #back:hover, #runHack:hover {
+        #back:hover {
             background: rgba(0,0,0,0.8);
         }
-        #back { top: 10px; }
-        #runHack { top: 55px; }
     </style>
 </head>
 <body>
 
-<!-- BACK BUTTON -->
 <div id="back" onclick="window.location.href='../index.html'">← Back</div>
 
-<!-- NEW HACK BUTTON -->
-<div id="runHack" onclick="injectHack()">Run Hack</div>
-
-<!-- COOKIE CLICKER -->
 <iframe id="ccFrame" src="https://learncodingdaily.com/assets/mainstorage/cookieclicker.html"></iframe>
 
 <script>
-function injectHack() {
+/* AUTO-INJECT HACK WHEN COOKIE CLICKER LOADS */
+document.getElementById("ccFrame").onload = function () {
     const iframe = document.getElementById("ccFrame").contentWindow;
 
     iframe.eval(`
@@ -54,10 +49,7 @@ function injectHack() {
         var confirmans = false;
         var forCookies = { iter: 0, ctr: 0 };
 
-        const hinfo = {
-            version: '1.5',
-            changes: ''
-        };
+        const hinfo = { version: '1.5', changes: '' };
 
         var ac = {
             sure: false,
@@ -121,6 +113,7 @@ function injectHack() {
                     Game.cookies += Number(ans);
                     Game.cookiesEarned += Number(ans);
                 }
+
             } else if (ans == '2') {
                 ans = prompt('How many golden cookies to spawn?');
                 if (ans && Number(ans) > 0) {
@@ -130,15 +123,18 @@ function injectHack() {
                     }
                     forCookies.ctr = 0;
                 }
+
             } else if (ans == '3') {
                 ans = prompt('Delay between clicks in ms (press C to stop).');
                 if (ans && Number(ans) >= 1) {
                     ac.timer = setInterval(ac.click, Number(ans));
                 }
+
             } else if (ans == '4') {
                 mwheel.active = !mwheel.active;
                 document.onmousewheel = mwheel.active ? ac.click : null;
                 alert(\`Mouse wheel clicking \${mwheel.active ? 'enabled' : 'disabled'}\`);
+                
             } else if (ans == '5') {
                 var list = [
                     'Cursor','Alchemy lab','Antimatter condenser','Bank','Chancemaker',
@@ -151,11 +147,13 @@ function injectHack() {
                     var amt = Number(prompt('How many?'));
                     if (!isNaN(amt)) Game.Objects[list[idx]].getFree(amt);
                 }
+
             } else if (ans == '6') {
                 ans = prompt('How many sugar lumps?');
                 if (ans && !isNaN(Number(ans))) {
                     Game.gainLumps(Number(ans));
                 }
+
             } else if (ans == '7') {
                 var b = prompt('Buffs:\\n1) Frenzy');
                 if (b == '1') {
@@ -163,6 +161,7 @@ function injectHack() {
                     var pow = Number(prompt('Power multiplier?'));
                     Game.gainBuff('frenzy', dur, pow);
                 }
+
             } else if (ans == '8') {
                 if (Game.Objects["Wizard tower"].amount <= 0 || Game.Objects["Wizard tower"].level < 2) {
                     alert('You have not unlocked the Grimoire.');
@@ -182,10 +181,9 @@ function injectHack() {
         console.log('[== Hack ready. Press H to open menu. ==]');
     `);
 
-    alert("Hack injected. Press H inside the game.");
-}
+    console.log("Hack auto-injected.");
+};
 </script>
 
 </body>
 </html>
-
