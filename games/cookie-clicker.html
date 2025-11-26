@@ -15,9 +15,8 @@
             height: 100%;
             border: none;
         }
-        #back {
+        #back, #guiToggle {
             position: absolute;
-            top: 10px;
             left: 10px;
             padding: 10px 14px;
             background: rgba(0,0,0,0.6);
@@ -26,17 +25,45 @@
             cursor: pointer;
             font-family: sans-serif;
         }
-        #back:hover {
+        #back:hover, #guiToggle:hover {
             background: rgba(0,0,0,0.8);
+        }
+        #back { top: 10px; }
+        #guiToggle { top: 55px; } /* GUI button under the Back button */
+
+        /* Optional: keep debug panel above iframe */
+        #debug {
+            position: absolute;
+            z-index: 99999;
         }
     </style>
 </head>
 <body>
 
+<!-- BACK BUTTON -->
 <div id="back" onclick="window.location.href='../index.html'">← Back</div>
 
-<!-- PASTE THE GAME LINK BELOW -->
+<!-- NEW GUI TOGGLE BUTTON -->
+<div id="guiToggle" onclick="toggleGUI()">GUI</div>
+
+<!-- YOUR DEBUG PANEL -->
+<div id="debug" style="display: block;">
+    <!-- your entire debug HTML block goes here unchanged -->
+    <div id="debug" style="display: block;">
+          <div id="devConsole" class="framed"><div class="icon" style="position:absolute;left:-9px;top:-6px;background-position:-480px -288px;"></div><div style="position:absolute;left:0px;top:0px;z-index:10;font-size:10px;background:#000;padding:1px;" id="fpsCounter">28 fps</div><div id="devConsoleContent"><div class="title" style="font-size:14px;margin:6px;">Dev tools</div><a class="option neato" onclick="Game.Ascend(1);">Ascend</a><div class="line"></div><a class="option neato" onclick="Game.cookies*=10;Game.cookiesEarned*=10;">x10</a><a class="option neato" onclick="Game.cookies/=10;Game.cookiesEarned/=10;">/10</a><br><a class="option neato" onclick="Game.cookies*=1000;Game.cookiesEarned*=1000;">x1k</a><a class="option neato" onclick="Game.cookies/=1000;Game.cookiesEarned/=1000;">/1k</a><br><a class="option neato" onclick="for (var i in Game.Objects){Game.Objects[i].buy(100);}">Buy 100 of all</a><a class="option neato" onclick="for (var i in Game.Objects){Game.Objects[i].sell(100);}">Sell 100 of all</a><br><a class="option neato" onclick="Game.gainLumps(10);">+10 lumps</a><a class="option neato" onclick="for (var i in Game.Objects){Game.Objects[i].level=0;Game.Objects[i].onMinigame=false;Game.Objects[i].refresh();}Game.recalculateGains=1;">Reset levels</a><a class="option neato" onclick="Game.cookiesReset+=Game.HowManyCookiesReset((Game.heavenlyChips||1)*1000);Game.EarnHeavenlyChips(0,true);Game.recalculateGains=1;">HC x1k</a><a class="option neato" onclick="Game.cookiesReset=(Game.heavenlyChips&lt;100?0:Game.HowManyCookiesReset(Math.floor(Game.heavenlyChips*0.001)));Game.cookiesReset=Math.max(Game.cookiesReset,0);Game.EarnHeavenlyChips(0,true);if (Game.cookiesReset&lt;=0){Game.heavenlyChips=0;}Game.recalculateGains=1;">HC /1k</a><br><a class="option neato" onclick="Game.cookiesEarned=0;Game.recalculateGains=1;">Reset cookies earned</a><br><div class="line"></div><a class="option warning" onclick="Game.RuinTheFun(1);">Ruin The Fun</a><a class="option warning" onclick="Game.SesameReset();">Wipe</a><a class="option neato" onclick="Game.GetAllDebugs();">All debugs</a><a class="option neato" onclick="Game.debugTimersOn=!Game.debugTimersOn;Game.OpenSesame();">Timers Off</a><br><a class="option neato" onclick="Game.SetAllUpgrades(0);">No upgrades</a><a class="option neato" onclick="Game.SetAllUpgrades(1);">All upgrades</a><br><a class="option neato" onclick="Game.SetAllAchievs(0);">No achievs</a><a class="option neato" onclick="Game.SetAllAchievs(1);">All achievs</a><br><a class="option neato" onclick="Game.santaLevel=0;Game.dragonLevel=0;">Reset specials</a><a class="option neato" onclick="Game.MaxSpecials();">Max specials</a><br><a class="option neato" onclick="Game.lumpRefill=0;/*Date.now()-Game.getLumpRefillMax();*/">Reset refills</a><a class="option neato" onclick="Game.EditAscend();">Ascend Edit</a><a class="option neato" onclick="Game.DebugUpgradeCpS();">Debug upgrades CpS</a><a class="option neato" onclick="Game.seed=Game.makeSeed();">Re-seed</a><a class="option neato" onclick="Game.heralds=100;l('heraldsAmount').textContent=Game.heralds;Game.externalDataLoaded=true;Game.recalculateGains=1;">Max heralds</a><div class="line"></div><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='frenzy';">Frenzy</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='multiply cookies';">Lucky</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='ruin cookies';">Ruin</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='blood frenzy';">Elder frenzy</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='clot';">Clot</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='click frenzy';">Click frenzy</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='cursed finger';">Cursed finger</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='chain cookie';">Cookie chain</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='cookie storm';">Cookie storm</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='building special';">Building special</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='dragon harvest';">Dragon Harvest</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='dragonflight';">Dragonflight</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='free sugar lump';">Sweet</a><a class="option neato" onclick="var newShimmer=new Game.shimmer('golden');newShimmer.force='blab';">Blab</a></div></div><canvas id="fpsGraph" width="128" height="64" style="opacity: 0.5; pointer-events: none; transform-origin: 0% 0%; transform: scale(0.75);"></canvas>
+          <div id="debugLog" style="display: none;"><div style="border-top:1px solid #ccc;">START</div><div style="padding-left:8px;">browser stuff : 34ms</div><div style="border-top:1px solid #ccc;">LOGIC</div><div style="padding-left:8px;">logic : 0ms</div><div style="border-top:1px solid #ccc;">END LOGIC</div><div style="padding-left:8px;">window background : 0ms</div><div style="padding-left:8px;">left background : 0ms</div><div style="padding-left:8px;">particles : 0ms</div><div style="padding-left:8px;">shine : 0ms</div><div style="padding-left:8px;">big cookie : 0ms</div><div style="padding-left:8px;">cursors : 0ms</div><div style="padding-left:8px;">milk : 0ms</div><div style="padding-left:8px;">wrinklers : 0ms</div><div style="padding-left:8px;">evolvables : 0ms</div><div style="padding-left:8px;">text particles : 0ms</div><div style="padding-left:8px;">end of background : 0ms</div><div style="padding-left:8px;">cookie amount : 0ms</div><div style="padding-left:8px;">draw minigames : 0ms</div><div style="padding-left:8px;">store : 0ms</div><div style="padding-left:8px;">buildings : 0ms</div><div style="padding-left:8px;">notes : 0ms</div></div>
+        </div>
+</div>
+
+<!-- GAME -->
 <iframe src="https://learncodingdaily.com/assets/mainstorage/cookieclicker.html"></iframe>
+
+<script>
+function toggleGUI() {
+    const dbg = document.getElementById("debug");
+    dbg.style.display = dbg.style.display === "none" ? "block" : "none";
+}
+</script>
 
 </body>
 </html>
