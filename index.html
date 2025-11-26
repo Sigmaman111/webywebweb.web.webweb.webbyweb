@@ -1,131 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Game Hub</title>
-
 <style>
     body {
         margin: 0;
-        padding: 30px;
-        background: #1a1a1a;
+        background: #111;
         color: white;
-        font-family: Arial;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    header {
+        padding: 30px 0;
     }
 
     h1 {
-        text-align: center;
+        margin: 0;
         font-size: 42px;
-        margin-bottom: 25px;
     }
 
-    .search-container {
-        width: 100%;
-        max-width: 600px;
-        margin: auto;
-        text-align: center;
+    p.subtitle {
+        margin: 5px 0 25px 0;
+        font-size: 18px;
+        opacity: 0.8;
     }
 
-    input {
-        width: 100%;
-        padding: 12px;
+    #search {
+        width: 60%;
+        padding: 14px;
+        font-size: 18px;
         border-radius: 8px;
         border: none;
-        font-size: 18px;
+        outline: none;
     }
 
-    .results-container {
-        margin-top: 12px;
-        width: 100%;
-    }
-
-    .result-box {
-        background: #222;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 12px;
-        cursor: pointer;
-        text-align: left;
-        transition: 0.2s;
+    #results {
+        margin-top: 30px;
         display: flex;
-        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding-bottom: 50px;
     }
 
-    .result-box:hover {
+    .game-card {
+        width: 200px;
+        background: #222;
+        padding: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .game-card:hover {
         background: #333;
+        transform: scale(1.05);
     }
 
-    .result-img {
-        width: 90px;
-        height: 90px;
-        border-radius: 8px;
-        object-fit: cover;
-        margin-right: 15px;
+    .game-card img {
+        width: 100%;
+        border-radius: 10px;
     }
 
-    .result-title {
-        font-size: 22px;
-        margin: 0;
+    .game-card p {
+        margin-top: 10px;
+        font-size: 16px;
     }
 </style>
 </head>
-
 <body>
 
-<h1>GAME HUB</h1>
+<header>
+    <h1>Game Hub</h1>
+    <p class="subtitle">Search and play your favourite web games</p>
+</header>
 
-<div class="search-container">
-    <input id="searchBar" type="text" placeholder="Search a game..." oninput="showResults()">
-    <div id="resultsContainer" class="results-container"></div>
-</div>
+<input id="search" type="text" placeholder="Search games…">
+
+<div id="results"></div>
 
 <script>
-// LIST OF GAMES
+/* ===== GAME LIST ===== */
 const games = [
-    {
-        name: "cookie clicker",
-        link: "games/cookie-clicker/index.html",
-        image: "games/cookie-clicker/thumbnail.png"
-    },
-    {
-        name: "game one",
-        link: "games/game1/index.html",
-        image: "games/game1/thumbnail.png"
-    },
-    {
-        name: "game two",
-        link: "games/game2/index.html",
-        image: "games/game2/thumbnail.png"
-    }
+    { name: "Cookie Clicker", page: "https://sigmaman111.github.io/webywebweb.web.webweb.webbyweb/games/cookie-clicker.html", image: "assets/cookie-clicker.png" },
+    { name: "Slope", page: "games/slope.html", image: "assets/slope.png" },
+    { name: "Moto X3M", page: "games/moto-x3m.html", image: "assets/moto-x3m.png" },
+    { name: "Clicking Madness", page: "games/clicking-madness.html", image: "assets/clicking-madness.png" }
 ];
 
-// SHOW PARTIAL SEARCH RESULTS
-function showResults() {
-    const text = document.getElementById("searchBar").value.toLowerCase().trim();
-    const container = document.getElementById("resultsContainer");
+/* ===== SEARCH FUNCTION ===== */
+document.getElementById("search").addEventListener("input", function () {
+    const query = this.value.toLowerCase().trim();
+    const resultsDiv = document.getElementById("results");
 
-    container.innerHTML = "";
+    resultsDiv.innerHTML = ""; // Clear previous results
 
-    if (text === "") return;
+    if (query === "") return;
 
-    const matches = games.filter(g => g.name.toLowerCase().includes(text));
+    const filtered = games.filter(g => g.name.toLowerCase().includes(query));
 
-    if (matches.length === 0) return;
-
-    matches.forEach(game => {
-        const box = document.createElement("div");
-        box.className = "result-box";
-        box.onclick = () => window.location.href = game.link;
-
-        box.innerHTML = `
-            <img class="result-img" src="${game.image}">
-            <h3 class="result-title">${game.name}</h3>
+    filtered.forEach(game => {
+        const card = document.createElement("div");
+        card.className = "game-card";
+        card.innerHTML = `
+            <img src="${game.image}">
+            <p>${game.name}</p>
         `;
-        container.appendChild(box);
+        card.onclick = () => window.location.href = game.page;
+        resultsDiv.appendChild(card);
     });
-}
+});
 </script>
 
 </body>
 </html>
-
