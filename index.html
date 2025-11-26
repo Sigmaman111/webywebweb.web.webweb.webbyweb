@@ -14,7 +14,7 @@
     }
 
     header {
-        padding: 50px 0 20px 0;
+        padding: 50px 0 10px 0;
         text-align: center;
         animation: fadeIn 1.2s ease;
     }
@@ -32,6 +32,33 @@
         font-size: 20px;
         opacity: 0.9;
         text-shadow: 0 0 10px #0088aa;
+    }
+
+    /* Tabs */
+    .tabs {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        font-size: 18px;
+    }
+
+    .tab {
+        cursor: pointer;
+        padding: 10px 20px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        transition: 0.25s;
+    }
+
+    .tab.active {
+        background: #00eaff;
+        color: black;
+        font-weight: bold;
+    }
+
+    .tab:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.13);
     }
 
     /* Search box */
@@ -75,6 +102,7 @@
         cursor: pointer;
         backdrop-filter: blur(6px);
         transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+        position: relative;
     }
 
     .game-card:hover {
@@ -97,7 +125,22 @@
         text-shadow: 0 0 8px #00ddee;
     }
 
-    /* Fade animation */
+    /* Favourite star */
+    .star {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        font-size: 26px;
+        cursor: pointer;
+        transition: 0.2s;
+        user-select: none;
+    }
+
+    .star.fav {
+        color: gold;
+        text-shadow: 0 0 8px gold;
+    }
+
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(-20px); }
         to   { opacity: 1; transform: translateY(0); }
@@ -112,6 +155,12 @@
     <p class="subtitle">Search and play your favourite web games</p>
 </header>
 
+<!-- Tabs -->
+<div class="tabs">
+    <div class="tab active" id="tab-all">All Games</div>
+    <div class="tab" id="tab-fav">Favourites</div>
+</div>
+
 <input id="search" type="text" placeholder="Search games…">
 
 <div id="results"></div>
@@ -125,28 +174,78 @@ const games = [
     { name: "Clicking Madness", page: "games/clicking-madness.html", image: "assets/clicking-madness.png" }
 ];
 
-/* ===== SEARCH FUNCTION ===== */
-document.getElementById("search").addEventListener("input", function () {
-    const query = this.value.toLowerCase().trim();
-    const resultsDiv = document.getElementById("results");
+/* ===== FAVOURITES SYSTEM ===== */
+let favourites = JSON.parse(localStorage.getItem("favourites")) || [];
 
+function toggleFavourite(gameName) {
+    if (favourites.includes(gameName)) {
+        favourites = favourites.filter(f => f !== gameName);
+    } else {
+        favourites.push(gameName);
+    }
+    localStorage.setItem("favourites", JSON.stringify(favourites));
+    renderGames();
+}
+
+function isFavourite(name) {
+    return favourites.includes(name);
+}
+
+/* ===== RENDERING ===== */
+let currentTab = "all";
+
+document.getElementById("tab-all").onclick = () => {
+    currentTab = "all";
+    setActiveTab();
+    renderGames();
+};
+
+document.getElementById("tab-fav").onclick = () => {
+    currentTab = "fav";
+    setActiveTab();
+    renderGames();
+};
+
+function setActiveTab() {
+    document.getElementById("tab-all").classList.toggle("active", currentTab === "all");
+    document.getElementById("tab-fav").classList.toggle("active", currentTab === "fav");
+}
+
+/* Render cards */
+function renderGames() {
+    const query = document.getElementById("search").value.toLowerCase().trim();
+    const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
 
-    if (query === "") return;
+    let list = games;
 
-    const filtered = games.filter(g => g.name.toLowerCase().includes(query));
+    if (currentTab === "fav") {
+        list = list.filter(g => favourites.includes(g.name));
+    }
 
-    filtered.forEach(game => {
+    if (query) {
+        list = list.filter(g => g.name.toLowerCase().includes(query));
+    }
+
+    list.forEach(game => {
         const card = document.createElement("div");
         card.className = "game-card";
         card.innerHTML = `
+            <span class="star ${isFavourite(game.name) ? "fav" : ""}" onclick="event.stopPropagation(); toggleFavourite('${game.name}')">
+                ★
+            </span>
             <img src="${game.image}">
             <p>${game.name}</p>
         `;
         card.onclick = () => window.location.href = game.page;
         resultsDiv.appendChild(card);
     });
-});
+}
+
+renderGames();
+
+/* ===== SEARCH HANDLER ===== */
+document.getElementById("search").addEventListener("input", renderGames);
 </script>
 
 </body>
